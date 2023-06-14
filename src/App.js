@@ -43,13 +43,13 @@ export function Board({xIsNext, squares, onPlay}) {
     </>);
 }
 
-export function History({history}) {
+export function History({history, onClickHistory}) {
 
   let list = history.map(handleHistoryListItem);
   
-  function handleHistoryListItem(historyItem)
+  function handleHistoryListItem(historyItem, index)
   {
-    if (historyItem.includes('X')) return <li>{historyItem}</li>
+    if (historyItem.includes('X')) return <li><button onClick={() => onClickHistory(historyItem, index)}> { historyItem } </button></li>
     return ''
   }
   
@@ -63,10 +63,18 @@ export function History({history}) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill("")]);
   const [xIsNext, setxIsNext] = useState(true);
+  const [msgPlayNo, setmsgPlayNo] = useState("");
+  const [msgHistory, setmsgHistory] = useState("");
 
   function handlePlay(nextSquares) {
     setHistory([...history, nextSquares]); // java spread operator
     setxIsNext(!xIsNext);
+  }
+  
+  function handleHistoryClick(history, index) {
+    setmsgPlayNo("Changed back to go " + index);
+    setmsgHistory(history);
+    handlePlay(history);
   }
 
   return (
@@ -75,8 +83,9 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={history[history.length- 1]} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <History history={history} />
+        <History history={history} onClickHistory={handleHistoryClick}/>
       </div>
+      <div>{msgPlayNo}: {msgHistory}</div>
     </div>
   );
 }
