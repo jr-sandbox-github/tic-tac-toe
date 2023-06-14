@@ -43,6 +43,23 @@ export function Board({xIsNext, squares, onPlay}) {
     </>);
 }
 
+export function History({history}) {
+
+  let list = history.map(handleHistoryListItem);
+  
+  function handleHistoryListItem(historyItem)
+  {
+    if (historyItem.includes('X')) return <li>{historyItem}</li>
+    return ''
+  }
+  
+  return (
+    <ol>
+      { list }
+    </ol>
+  );
+}
+
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill("")]);
   const [xIsNext, setxIsNext] = useState(true);
@@ -58,6 +75,7 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={history[history.length- 1]} onPlay={handlePlay} />
       </div>
       <div className="game-info">
+        <History history={history} />
       </div>
     </div>
   );
